@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- TODO #3: spring security를 위한 namespace 선언 -->
 <html lang="ko"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
@@ -13,7 +12,6 @@
     <th:block th:include="fragments/heading" />
 
     <ul>
-        <!-- TODO #4: `sec:authorize`, `sec:authorize-url` -->
         <li sec:authorize="hasAuthority('ROLE_ADMIN')">
             <a href="/admin/manage">Admin Tool</a>
         </li>

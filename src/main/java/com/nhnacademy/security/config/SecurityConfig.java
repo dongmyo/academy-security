@@ -23,14 +23,20 @@ public class SecurityConfig {
                 .requestMatchers("/redirect-index").authenticated()
                 .anyRequest().permitAll()
                 .and()
+            // TODO #2: 로그인 페이지 커스터마이징
             .formLogin()
                 .usernameParameter("id")
                 .passwordParameter("pwd")
+                .loginPage("/auth/login")
+                .loginProcessingUrl("/login")
                 .and()
+            // TODO #5: 로그아웃 페이지 커스터마이징
             .logout()
                 .and()
+            // TODO #1: CSRF Filter 설정
             .csrf()
-                .disable()
+                .and()
+                /*.disable()*/
             .sessionManagement()
                 .sessionFixation()
                     .none()
