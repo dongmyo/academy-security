@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableWebSecurity(debug = true)
 @Configuration
@@ -23,6 +24,8 @@ public class SecurityConfig {
                 .anyRequest().permitAll()
                 .and()
             .formLogin()
+                .usernameParameter("id")
+                .passwordParameter("pwd")
                 .and()
             .logout()
                 .and()
@@ -35,14 +38,18 @@ public class SecurityConfig {
             .build();
     }
 
-    // TODO #1: DaoAuthenticationProvider
     @Bean
     public AuthenticationProvider authenticationProvider(CustomUserDetailsService customUserDetailsService) {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(customUserDetailsService);
-        authenticationProvider.setPasswordEncoder(new BCryptPasswordEncoder());
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
 
         return authenticationProvider;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
 }

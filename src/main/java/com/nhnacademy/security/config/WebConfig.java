@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring5.SpringTemplateEngine;
@@ -31,6 +32,15 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware, Mes
     @Override
     public void setMessageSource(MessageSource messageSource) {
         this.messageSource = messageSource;
+    }
+
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/").setViewName("index");
+        registry.addViewController("/admin/**").setViewName("admin");
+        registry.addViewController("/private-project/**").setViewName("private-project");
+        registry.addViewController("/project/**").setViewName("project");
+        registry.addRedirectViewController("/redirect-index", "/");
     }
 
     @Override
