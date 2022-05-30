@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="ko">
-<!-- TODO #11: sec:authorize, sec:authorization 대신 request.attribute 이용하도록 수정 -->
-<div th:if="${not #strings.isEmpty(username)}">
-    <span th:text="${username}" />,&nbsp;
+<html lang="ko" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<!-- TODO #7: sec:authorize, sec:authorization 그대로 이용 -->
+<div sec:authorize="isAuthenticated()">
+    <span sec:authentication="principal.username" />,&nbsp;
     <a href="/auth/logout">Logout</a>
 </div>
-<div th:unless="${not #strings.isEmpty(username)}">
+<div sec:authorize="!isAuthenticated()">
     <a href="/redirect-index">Login</a>
 </div>
 <br />

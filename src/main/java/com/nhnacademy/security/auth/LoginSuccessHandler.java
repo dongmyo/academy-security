@@ -3,43 +3,29 @@ package com.nhnacademy.security.auth;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.data.redis.core.RedisTemplate;
+import javax.servlet.http.HttpSession;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
-// TODO #5: login success handler 구현
+// TODO #7: login success handler 구현
 public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
-    private final RedisTemplate<String, Object> redisTemplate;
-
-    public LoginSuccessHandler(RedisTemplate<String, Object> redisTemplate) {
-        this.redisTemplate = redisTemplate;
-    }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication)
         throws ServletException, IOException {
-        String sessionId = UUID.randomUUID().toString();
+        super.onAuthenticationSuccess(request, response, authentication);
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         List<GrantedAuthority> authorities = new ArrayList<>(userDetails.getAuthorities());
 
-        redisTemplate.opsForHash().put(sessionId, "username", userDetails.getUsername());
-        redisTemplate.opsForHash().put(sessionId, "authority", authorities.get(0).getAuthority());
-
-        Cookie cookie = new Cookie("SESSION", sessionId);
-        cookie.setMaxAge(259200);     // 3일
-
-        response.addCookie(cookie);
-
-        super.onAuthenticationSuccess(request, response, authentication);
+        HttpSession session = request.getSession();
+        session.setAttribute("username", userDetails.getUsername());
+        session.setAttribute("authority", authorities.get(0).getAuthority());
     }
-
 }

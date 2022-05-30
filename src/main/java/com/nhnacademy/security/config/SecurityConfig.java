@@ -1,6 +1,5 @@
 package com.nhnacademy.security.config;
 
-import com.nhnacademy.security.auth.CustomLogoutSuccessHandler;
 import com.nhnacademy.security.auth.LoginSuccessHandler;
 import com.nhnacademy.security.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 @EnableWebSecurity(debug = true)
 @Configuration
@@ -39,14 +37,10 @@ public class SecurityConfig {
                 .passwordParameter("pwd")
                 .loginPage("/auth/login")
                 .loginProcessingUrl("/login")
-                // TODO #4: login success handler 설정
-                .successHandler(loginSuccessHandler(null))
+                // TODO #6: login success handler 설정
+                .successHandler(loginSuccessHandler())
                 .and()
             .logout()
-                .deleteCookies("SESSION")
-                .invalidateHttpSession(true)
-                // TODO #7: logout success handler 설정
-                .logoutSuccessHandler(logoutSuccessHandler(null))
                 .and()
             .csrf()
                 .and()
@@ -78,16 +72,10 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // TODO #3: login success handler bean
+    // TODO #5: login success handler bean
     @Bean
-    public AuthenticationSuccessHandler loginSuccessHandler(RedisTemplate<String, Object> redisTemplate) {
-        return new LoginSuccessHandler(redisTemplate);
-    }
-
-    // TODO #6: logout success handler bean
-    @Bean
-    public LogoutSuccessHandler logoutSuccessHandler(RedisTemplate<String, Object> redisTemplate) {
-        return new CustomLogoutSuccessHandler(redisTemplate);
+    public AuthenticationSuccessHandler loginSuccessHandler() {
+        return new LoginSuccessHandler();
     }
 
 }
