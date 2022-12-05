@@ -9,11 +9,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
-// TODO #4: security config
 @EnableWebSecurity(debug = true)
 @Configuration
 public class SecurityConfig {
-    // TODO #5: SecurityFilterChain 을 반환하는 Bean 등록
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests()
@@ -24,6 +22,7 @@ public class SecurityConfig {
                 .anyRequest().permitAll()
                 .and()
             .formLogin()
+                // TODO #3: 실습 - login success handler를 설정하시오
                 .and()
             .logout()
                 .and()
@@ -36,7 +35,6 @@ public class SecurityConfig {
             .build();
     }
 
-    // TODO #6: InMemoryUserDetailsManager 반환하는 Bean 등록
     @Bean
     public InMemoryUserDetailsManager userDetailsService() {
         UserDetails admin = User.withUsername("admin")
