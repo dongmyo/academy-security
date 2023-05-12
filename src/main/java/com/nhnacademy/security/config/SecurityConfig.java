@@ -1,8 +1,11 @@
 package com.nhnacademy.security.config;
 
+import com.nhnacademy.security.auth.CustomLogoutSuccessHandler;
+import com.nhnacademy.security.auth.LoginSuccessHandler;
 import com.nhnacademy.security.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,6 +13,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 @EnableWebSecurity(debug = true)
 @Configuration
@@ -18,14 +23,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests()
                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-                /* TODO #3: 실습 - 비공개 프로젝트 URL은 (`/private-project/**`) ADMIN 이나 MEMBER 권한이 있을 때 접근 가능하도록 설정해주세요. */
                 .requestMatchers("/private-project/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_MEMBER")
                 .requestMatchers("/project/**").authenticated()
                 .requestMatchers("/redirect-index").authenticated()
                 .anyRequest().permitAll()
                 .and()
             .requiresChannel()
-                /* TODO #2: 실습 - 관리툴/비공개 프로젝트/프로젝트 페이지는 secure로 접속되도록 설정해주세요. */
                 .requestMatchers("/admin/**").requiresSecure()
                 .requestMatchers("/private-project/**").requiresSecure()
                 .requestMatchers("/project/**").requiresSecure()
@@ -36,8 +39,14 @@ public class SecurityConfig {
                 .passwordParameter("pwd")
                 .loginPage("/auth/login")
                 .loginProcessingUrl("/login")
+                // TODO #4: login success handler 설정
+                .successHandler(loginSuccessHandler(null))
                 .and()
             .logout()
+                .deleteCookies("SESSION")
+                .invalidateHttpSession(true)
+                // TODO #7: logout success handler 설정
+                .logoutSuccessHandler(logoutSuccessHandler(null))
                 .and()
             .csrf()
                 .and()
@@ -47,11 +56,9 @@ public class SecurityConfig {
                 .and()
             .headers()
                 .defaultsDisabled()
-                /* TODO #4: 실습 - Security HTTP Response header 중 `X-Frame-Options` 헤더의 값을 SAMEORIGIN으로 설정해주세요. */
                 .frameOptions().sameOrigin()
                 .and()
             .exceptionHandling()
-                /* TODO #9: 실습 - custom 403 에러 페이지(`/error/403`)를 설정해주세요. */
                 .accessDeniedPage("/error/403")
                 .and()
             .build();
@@ -69,6 +76,18 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    // TODO #3: login success handler bean
+    @Bean
+    public AuthenticationSuccessHandler loginSuccessHandler(RedisTemplate<String, Object> redisTemplate) {
+        return new LoginSuccessHandler(redisTemplate);
+    }
+
+    // TODO #6: logout success handler bean
+    @Bean
+    public LogoutSuccessHandler logoutSuccessHandler(RedisTemplate<String, Object> redisTemplate) {
+        return new CustomLogoutSuccessHandler(redisTemplate);
     }
 
 }

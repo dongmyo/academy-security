@@ -179,6 +179,18 @@
             <artifactId>spring-security-taglibs</artifactId>
         </dependency>
 
+        <!-- TODO #1: redis 라이브러리 -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.lettuce</groupId>
+            <artifactId>lettuce-core</artifactId>
+            <version>6.1.10.RELEASE</version>
+        </dependency>
+
     </dependencies>
 
     <build>
