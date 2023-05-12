@@ -40,7 +40,6 @@
                 <scope>import</scope>
             </dependency>
 
-            <!-- TODO #1: spring security bom -->
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-bom</artifactId>
@@ -159,7 +158,6 @@
             <version>5.0.0</version>
         </dependency>
 
-        <!-- TODO #2: spring security library -->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>

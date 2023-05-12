@@ -1,19 +1,18 @@
 package com.nhnacademy.security.config;
 
+import com.nhnacademy.security.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-// TODO #4: security config
 @EnableWebSecurity(debug = true)
 @Configuration
 public class SecurityConfig {
-    // TODO #5: SecurityFilterChain 을 반환하는 Bean 등록
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests()
@@ -36,25 +35,14 @@ public class SecurityConfig {
             .build();
     }
 
-    // TODO #6: InMemoryUserDetailsManager 반환하는 Bean 등록
+    // TODO #1: DaoAuthenticationProvider
     @Bean
-    public InMemoryUserDetailsManager userDetailsService() {
-        UserDetails admin = User.withUsername("admin")
-                .password("{noop}admin")
-                .authorities("ROLE_ADMIN")
-                .build();
+    public AuthenticationProvider authenticationProvider(CustomUserDetailsService customUserDetailsService) {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(customUserDetailsService);
+        authenticationProvider.setPasswordEncoder(new BCryptPasswordEncoder());
 
-        UserDetails member = User.withUsername("member")
-                .password("{noop}member")
-                .authorities("ROLE_MEMBER")
-                .build();
-
-        UserDetails guest = User.withUsername("guest")
-            .password("{noop}guest")
-            .authorities("ROLE_GUEST")
-            .build();
-
-        return new InMemoryUserDetailsManager(admin, member, guest);
+        return authenticationProvider;
     }
 
 }
