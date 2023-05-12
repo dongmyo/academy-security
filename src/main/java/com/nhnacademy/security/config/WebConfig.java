@@ -42,10 +42,10 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware, Mes
         registry.addViewController("/private-project/**").setViewName("private-project");
         registry.addViewController("/project/**").setViewName("project");
         registry.addRedirectViewController("/redirect-index", "/");
-        // TODO #3: 로그인 페이지 view controller 설정
         registry.addViewController("/auth/login").setViewName("login");
-        // TODO #6: 로그아웃 페이지 view controller 설정
         registry.addViewController("/auth/logout").setViewName("logout");
+        // TODO #7: `/error/403` 요청 시 `/WEB-INF/views/error403.html` view template 응답하도록 설정.
+        registry.addViewController("/error/403").setViewName("error403");
     }
 
     @Override
