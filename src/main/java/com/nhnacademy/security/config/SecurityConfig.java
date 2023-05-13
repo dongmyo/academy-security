@@ -1,7 +1,6 @@
 package com.nhnacademy.security.config;
 
 import com.nhnacademy.security.filter.UsernameAdjustingFilter;
-import javax.servlet.Filter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,7 +9,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity(debug = true)
 @Configuration
@@ -31,28 +29,30 @@ public class SecurityConfig {
             .csrf()
                 .disable()
             .sessionManagement()
+                // TODO #2: 실습 - 최대 세션 갯수를 1개로 제한하시오
+                /* cf.) maximumSessions, maxSessionsPreventsLogin */
                 .sessionFixation()
                     .none()
                 .and()
-            // TODO #3: UsernameAdjustingFilter를 UsernamePasswordAuthenticationFilter 앞에 추가
-            .addFilterBefore(usernameAdjustingFilter(), UsernamePasswordAuthenticationFilter.class)
+            // TODO #4: 실습 - UsernameAdjustingFilter를 UsernamePasswordAuthenticationFilter 앞에 추가하시오.
+            /* ... */
             .build();
     }
 
-    // TODO #1: username을 email 형태로 변경
+    // TODO #3: email 형태였던 username을 다시 원래대로 돌림
     @Bean
     public InMemoryUserDetailsManager userDetailsService() {
-        UserDetails admin = User.withUsername("admin@nhnacademy.com")
+        UserDetails admin = User.withUsername("admin")
                 .password("{noop}admin")
                 .authorities("ROLE_ADMIN")
                 .build();
 
-        UserDetails member = User.withUsername("member@nhnacademy.com")
+        UserDetails member = User.withUsername("member")
                 .password("{noop}member")
                 .authorities("ROLE_MEMBER")
                 .build();
 
-        UserDetails guest = User.withUsername("guest@nhnacademy.com")
+        UserDetails guest = User.withUsername("guest")
             .password("{noop}guest")
             .authorities("ROLE_GUEST")
             .build();
@@ -60,7 +60,6 @@ public class SecurityConfig {
         return new InMemoryUserDetailsManager(admin, member, guest);
     }
 
-    // TODO #4: UsernameAdjustingFilter를 빈으로 등록
     @Bean
     public UsernameAdjustingFilter usernameAdjustingFilter() {
         return new UsernameAdjustingFilter("username");

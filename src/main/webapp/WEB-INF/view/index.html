@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>Main</title>
+</head>
+<body>
+    <h1>Main</h1>
+
+    <!-- TODO #1: 로그인 상태에 따라 다른 메시지를 출력 -->
+    <span th:if="${isLoggedIn}">
+        Already Logged In
+    </span>
+    <span th:unless="${isLoggedIn}">
+        <a href="/login">Login</a>
+    </span>
+
+</body>
+</html>

@@ -12,7 +12,6 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.Assert;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-// TODO #2: request parameter로 전달되는 username을 조정하는 필터
 public class UsernameAdjustingFilter extends OncePerRequestFilter {
     private final String usernameParameter;
     private final RequestMatcher requestMatcher = new AntPathRequestMatcher("/login", "POST");
@@ -35,8 +34,9 @@ public class UsernameAdjustingFilter extends OncePerRequestFilter {
                 public String getParameter(String name) {
                     if (Objects.equals(name, usernameParameter)) {
                         String username = super.getParameter(name);
-                        if (Objects.nonNull(username) && !username.endsWith("@nhnacademy.com")) {
-                            return username + "@nhnacademy.com";
+                        // TODO #5: username이 email 형태일 경우, `@nhnacademy.com` 을 제거하도록 처리
+                        if (Objects.nonNull(username) && username.endsWith("@nhnacademy.com")) {
+                            return username.substring(0, username.indexOf("@nhnacademy.com"));
                         }
                     }
 
