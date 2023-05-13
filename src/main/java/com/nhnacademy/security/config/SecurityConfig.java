@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity(debug = true)
 @Configuration
@@ -30,12 +31,14 @@ public class SecurityConfig {
                 .disable()
             .sessionManagement()
                 // TODO #2: 실습 - 최대 세션 갯수를 1개로 제한하시오
-                /* cf.) maximumSessions, maxSessionsPreventsLogin */
+                .maximumSessions(1)
+                .maxSessionsPreventsLogin(true)
+                .and()
                 .sessionFixation()
                     .none()
                 .and()
             // TODO #4: 실습 - UsernameAdjustingFilter를 UsernamePasswordAuthenticationFilter 앞에 추가하시오.
-            /* ... */
+            .addFilterBefore(usernameAdjustingFilter(), UsernamePasswordAuthenticationFilter.class)
             .build();
     }
 
