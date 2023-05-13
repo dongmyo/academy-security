@@ -8,7 +8,8 @@
     <form method="post" action="/login">
         <span th:text="#{login.id}" />: <input type="text" name="id" /><br />
         <span th:text="#{login.pwd}" />: <input type="password" name="pwd" /><br />
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <!-- TODO: #1-1 CSRF 필터를 제거했기 때문에 csrf 토큰 파라미터를 전달하지 않는다  -->
+<!--        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
         <input type="submit" />
     </form>
 </body>
