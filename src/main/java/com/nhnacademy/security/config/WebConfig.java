@@ -42,9 +42,7 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware, Mes
         registry.addViewController("/private-project/**").setViewName("private-project");
         registry.addViewController("/project/**").setViewName("project");
         registry.addRedirectViewController("/redirect-index", "/");
-        // TODO #3: 로그인 페이지 view controller 설정
         registry.addViewController("/auth/login").setViewName("login");
-        // TODO #6: 로그아웃 페이지 view controller 설정
         registry.addViewController("/auth/logout").setViewName("logout");
     }
 

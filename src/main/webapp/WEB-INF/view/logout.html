@@ -5,7 +5,6 @@
     <title>Logout</title>
 </head>
 <body>
-    <!-- TODO #8: custom logout page view -->
     <form method="post" action="/logout">
         로그아웃<br />
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
