@@ -5,10 +5,10 @@
     <title>Login</title>
 </head>
 <body>
-    <form method="post" action="/login">
-        <span th:text="#{login.id}" />: <input type="text" name="id" /><br />
-        <span th:text="#{login.pwd}" />: <input type="password" name="pwd" /><br />
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    <form method="post" action="/login-process">
+        <!-- TODO #3: 파라미터 이름 확인 -->
+        Username: <input type="text" name="username" /><br />
+        Password: <input type="password" name="password" /><br />
         <input type="submit" />
     </form>
 </body>

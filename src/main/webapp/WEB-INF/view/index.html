@@ -11,15 +11,13 @@
 
     <th:block th:include="fragments/heading" />
 
+    <!-- TODO #2: 권한에 맞는 링크 노출 -->
     <ul>
-        <li sec:authorize="hasAuthority('ROLE_ADMIN')">
-            <a href="/admin/manage">Admin Tool</a>
+        <li sec:authorize="hasAuthority('ROLE_TEACHER')">
+            <a href="/teacher/1">for Teachers</a>
         </li>
-        <li sec:authorize-url="/project/1">
-            <a href="/project/1">Public Project</a>
-        </li>
-        <li sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_MEMBER')">
-            <a href="/private-project/2">Private Project</a>
+        <li sec:authorize="hasAuthority('ROLE_STUDENT')">
+            <a href="/student/2">for Students</a>
         </li>
     </ul>
 

@@ -4,8 +4,6 @@ import com.nhnacademy.security.controller.ControllerBase;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.MessageSource;
-import org.springframework.context.MessageSourceAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -21,9 +19,8 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 @EnableWebMvc
 @Configuration
 @ComponentScan(basePackageClasses = ControllerBase.class)
-public class WebConfig implements WebMvcConfigurer, ApplicationContextAware, MessageSourceAware {
+public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
     private ApplicationContext applicationContext;
-    private MessageSource messageSource;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -31,20 +28,13 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware, Mes
     }
 
     @Override
-    public void setMessageSource(MessageSource messageSource) {
-        this.messageSource = messageSource;
-    }
-
-    @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("index");
-        registry.addViewController("/admin/**").setViewName("admin");
-        registry.addViewController("/private-project/**").setViewName("private-project");
-        registry.addViewController("/project/**").setViewName("project");
+        registry.addViewController("/student/**").setViewName("student");
+        registry.addViewController("/teacher/**").setViewName("teacher");
         registry.addRedirectViewController("/redirect-index", "/");
-        registry.addViewController("/auth/login").setViewName("login");
-        registry.addViewController("/auth/logout").setViewName("logout");
-        // TODO #7: `/error/403` 요청 시 `/WEB-INF/views/error403.html` view template 응답하도록 설정.
+        registry.addViewController("/login").setViewName("login");
+        registry.addViewController("/logout").setViewName("logout");
         registry.addViewController("/error/403").setViewName("error403");
     }
 
@@ -67,7 +57,6 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware, Mes
     public SpringTemplateEngine templateEngine() {
         SpringTemplateEngine templateEngine = new SpringTemplateEngine();
         templateEngine.setTemplateResolver(templateResolver());
-        templateEngine.setTemplateEngineMessageSource(messageSource);
         templateEngine.addDialect(new SpringSecurityDialect());
 
         return templateEngine;
